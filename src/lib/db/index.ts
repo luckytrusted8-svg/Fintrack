@@ -8,6 +8,7 @@ export interface Akun {
   id?: string;
   nama: string;
   jenis: JenisAkun;
+  icon?: string;
   nomor_rekening?: string;
   saldo_awal: number;
   saldo_sekarang: number;

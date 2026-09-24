@@ -15,6 +15,7 @@ import ProfileModal from '@/components/profile/ProfileModal';
 import CategoryManagementModal from '@/components/categories/CategoryManagementModal';
 import RecurringReminderModal from '@/components/recurring/RecurringReminderModal';
 import PinLockScreen from '@/components/security/PinLockScreen';
+import AccountIcon from '@/components/accounts/AccountIcon';
 import {
   db,
   Akun,
@@ -335,11 +336,16 @@ export default function HomePage() {
                     key={acc.id}
                     className="p-4 bg-white border border-slate-200 rounded-3xl flex items-center justify-between shadow-xs"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3.5">
                       <div
-                        className="w-4 h-4 rounded-full shrink-0"
-                        style={{ backgroundColor: acc.warna_hex }}
-                      />
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-xs"
+                        style={{
+                          backgroundColor: `${acc.warna_hex || '#10B981'}15`,
+                          color: acc.warna_hex || '#10B981',
+                        }}
+                      >
+                        <AccountIcon name={acc.icon} jenis={acc.jenis} className="w-5 h-5" />
+                      </div>
                       <div>
                         <h3 className="text-sm font-bold text-slate-900">{acc.nama}</h3>
                         <p className="text-[11px] text-slate-500 capitalize">{acc.jenis}</p>

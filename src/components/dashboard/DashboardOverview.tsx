@@ -29,6 +29,7 @@ import {
   YAxis,
 } from 'recharts';
 import CategoryIcon from '@/components/categories/CategoryIcon';
+import AccountIcon from '@/components/accounts/AccountIcon';
 
 interface DashboardOverviewProps {
   accounts: Akun[];
@@ -298,10 +299,15 @@ export default function DashboardOverview({
               >
                 <div className="flex items-center gap-1.5 mb-1">
                   <div
-                    className="w-2.5 h-2.5 rounded-full"
-                    style={{ backgroundColor: acc.warna_hex }}
-                  />
-                  <span className="text-[11px] font-semibold text-slate-600 truncate">
+                    className="w-5 h-5 rounded-md flex items-center justify-center shrink-0"
+                    style={{
+                      backgroundColor: `${acc.warna_hex || '#10B981'}20`,
+                      color: acc.warna_hex || '#10B981',
+                    }}
+                  >
+                    <AccountIcon name={acc.icon} jenis={acc.jenis} className="w-3 h-3" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-700 truncate">
                     {acc.nama}
                   </span>
                 </div>

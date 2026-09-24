@@ -237,11 +237,11 @@ export default function CategoryManagementModal({
                       key={c}
                       type="button"
                       onClick={() => setWarnaHex(c)}
-                      className="w-7 h-7 rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-xs"
+                      className="w-8 h-8 rounded-xl flex items-center justify-center transition-transform hover:scale-105 shadow-xs"
                       style={{ backgroundColor: c }}
                       aria-label={`Warna ${c}`}
                     >
-                      {warnaHex === c && <Check className="w-3.5 h-3.5 text-white" />}
+                      {warnaHex === c && <Check className="w-4 h-4 text-white" />}
                     </button>
                   ))}
                 </div>
