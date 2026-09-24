@@ -47,9 +47,11 @@ export default function TransactionFormModal({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const prevIsOpenRef = useRef(false);
+
   // Populate data if editing
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (isOpen && !prevIsOpenRef.current) {
       if (initialData) {
         setTipe(initialData.tipe);
         setJumlah(initialData.jumlah.toString());
@@ -69,8 +71,8 @@ export default function TransactionFormModal({
         setKeterangan('');
         setPhotoPreview(null);
       }
-    }, 0);
-    return () => clearTimeout(timer);
+    }
+    prevIsOpenRef.current = isOpen;
   }, [initialData, isOpen, accounts]);
 
   if (!isOpen) return null;
@@ -164,6 +166,19 @@ export default function TransactionFormModal({
           jumlah: nominal,
           keterangan: keterangan.trim() || undefined,
           foto_url: photoPreview || undefined,
+          updated_at: now,
+        });
+      } else {
+        await db.transaksi.add({
+          akun_id: activeAkunId,
+          target_akun_id: tipe === 'transfer' ? targetAkunId : undefined,
+          kategori_id: tipe !== 'transfer' ? selectedKategoriId || undefined : undefined,
+          tanggal,
+          tipe,
+          jumlah: nominal,
+          keterangan: keterangan.trim() || undefined,
+          foto_url: photoPreview || undefined,
+          created_at: now,
           updated_at: now,
         });
       }

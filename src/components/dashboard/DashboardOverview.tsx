@@ -73,6 +73,15 @@ export default function DashboardOverview({
   // 2. Filter transaksi bulan & tahun terpilih
   const currentMonthTransactions = useMemo(() => {
     return transactions.filter((t) => {
+      if (!t.tanggal) return false;
+      if (t.tanggal.includes('-')) {
+        const [yStr, mStr] = t.tanggal.split('-');
+        const y = parseInt(yStr, 10);
+        const m = parseInt(mStr, 10);
+        if (y && m) {
+          return m === selectedMonth && y === selectedYear;
+        }
+      }
       const d = new Date(t.tanggal);
       return d.getMonth() + 1 === selectedMonth && d.getFullYear() === selectedYear;
     });

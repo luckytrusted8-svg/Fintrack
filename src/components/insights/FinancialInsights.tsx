@@ -51,9 +51,18 @@ export default function FinancialInsights({
     const daysPassed = isCurrentActiveMonth ? Math.max(1, today.getDate()) : 30;
 
     transactions.forEach((t) => {
-      const d = new Date(t.tanggal);
-      const m = d.getMonth() + 1;
-      const y = d.getFullYear();
+      if (!t.tanggal) return;
+      let m = 0;
+      let y = 0;
+      if (t.tanggal.includes('-')) {
+        const [yStr, mStr] = t.tanggal.split('-');
+        y = parseInt(yStr, 10);
+        m = parseInt(mStr, 10);
+      } else {
+        const d = new Date(t.tanggal);
+        m = d.getMonth() + 1;
+        y = d.getFullYear();
+      }
       const amount = Number(t.jumlah) || 0;
 
       if (m === currentMonth && y === currentYear) {

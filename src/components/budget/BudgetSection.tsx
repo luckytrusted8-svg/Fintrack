@@ -48,13 +48,20 @@ export default function BudgetSection({
   const categoryExpenses = useMemo(() => {
     const map: Record<string, number> = {};
     transactions.forEach((t) => {
-      const d = new Date(t.tanggal);
-      if (
-        t.tipe === 'pengeluaran' &&
-        t.kategori_id &&
-        d.getMonth() + 1 === selectedMonth &&
-        d.getFullYear() === selectedYear
-      ) {
+      if (t.tipe !== 'pengeluaran' || !t.kategori_id || !t.tanggal) return;
+      let m = 0;
+      let y = 0;
+      if (t.tanggal.includes('-')) {
+        const [yStr, mStr] = t.tanggal.split('-');
+        y = parseInt(yStr, 10);
+        m = parseInt(mStr, 10);
+      } else {
+        const d = new Date(t.tanggal);
+        m = d.getMonth() + 1;
+        y = d.getFullYear();
+      }
+
+      if (m === selectedMonth && y === selectedYear) {
         map[t.kategori_id] = (map[t.kategori_id] || 0) + Number(t.jumlah);
       }
     });
