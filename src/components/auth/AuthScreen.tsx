@@ -156,7 +156,7 @@ export default function AuthScreen() {
                 onChange={(e) => setNamaLengkap(e.target.value)}
                 placeholder="Nama Anda"
                 required={isRegister}
-                className="w-full px-3.5 py-2.5 bg-[#0B0F17] border border-[#2A374F] rounded-xl text-sm text-[#F8FAFC] placeholder-[#64748B] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#0B0F17] border border-[#2A374F] rounded-xl text-sm text-[#F8FAFC] placeholder:text-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#10B981] transition-all"
               />
             </div>
           )}
@@ -172,7 +172,7 @@ export default function AuthScreen() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="nama@email.com"
               required
-              className="w-full px-3.5 py-2.5 bg-[#0B0F17] border border-[#2A374F] rounded-xl text-sm text-[#F8FAFC] placeholder-[#64748B] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-all"
+              className="w-full px-3.5 py-2.5 bg-[#0B0F17] border border-[#2A374F] rounded-xl text-sm text-[#F8FAFC] placeholder:text-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#10B981] transition-all"
             />
           </div>
 
@@ -188,14 +188,14 @@ export default function AuthScreen() {
               placeholder="Minimal 6 karakter"
               required
               minLength={6}
-              className="w-full px-3.5 py-2.5 bg-[#0B0F17] border border-[#2A374F] rounded-xl text-sm text-[#F8FAFC] placeholder-[#64748B] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-all"
+              className="w-full px-3.5 py-2.5 bg-[#0B0F17] border border-[#2A374F] rounded-xl text-sm text-[#F8FAFC] placeholder:text-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#10B981] transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full min-h-[44px] py-2.5 px-4 bg-[#10B981] hover:bg-[#059669] disabled:opacity-50 text-white font-medium text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-[#10B981]/20 active:scale-[0.99] transition-all"
+            className="w-full min-h-11 py-2.5 px-4 bg-[#10B981] hover:bg-[#059669] disabled:opacity-50 text-white font-medium text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-[#10B981]/20 active:scale-[0.99] transition-all"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin text-white" />

@@ -273,7 +273,7 @@ export default function BudgetSection({
                   value={selectedCatId}
                   onChange={(e) => setSelectedCatId(e.target.value)}
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Pilih kategori...</option>
                   {expenseCategories.map((c) => (
@@ -294,7 +294,7 @@ export default function BudgetSection({
                   onChange={(e) => setNominalLimit(e.target.value.replace(/\D/g, ''))}
                   placeholder="Rp 0"
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 tabular-nums"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                 />
               </div>
 

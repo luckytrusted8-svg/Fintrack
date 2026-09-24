@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Akun, Kategori, JenisTransaksi, Transaksi, db, recalculateAccountBalance, recalculateAllAccountBalances } from '@/lib/db';
+import { Akun, Kategori, JenisTransaksi, Transaksi, db, recalculateAllAccountBalances } from '@/lib/db';
 import { formatRupiah, toInputDateFormat } from '@/lib/utils/format';
 import { compressImageToBase64 } from '@/lib/utils/image';
 import { X, Camera, Image as ImageIcon, Loader2, AlertCircle, Plus } from 'lucide-react';
@@ -49,25 +49,28 @@ export default function TransactionFormModal({
 
   // Populate data if editing
   useEffect(() => {
-    if (initialData) {
-      setTipe(initialData.tipe);
-      setJumlah(initialData.jumlah.toString());
-      setSelectedAkunId(initialData.akun_id);
-      setTargetAkunId(initialData.target_akun_id || '');
-      setSelectedKategoriId(initialData.kategori_id || '');
-      setTanggal(initialData.tanggal);
-      setKeterangan(initialData.keterangan || '');
-      setPhotoPreview(initialData.foto_url || null);
-    } else {
-      setTipe('pengeluaran');
-      setJumlah('');
-      setSelectedAkunId(accounts[0]?.id?.toString() || '');
-      setTargetAkunId('');
-      setSelectedKategoriId('');
-      setTanggal(toInputDateFormat());
-      setKeterangan('');
-      setPhotoPreview(null);
-    }
+    const timer = setTimeout(() => {
+      if (initialData) {
+        setTipe(initialData.tipe);
+        setJumlah(initialData.jumlah.toString());
+        setSelectedAkunId(initialData.akun_id);
+        setTargetAkunId(initialData.target_akun_id || '');
+        setSelectedKategoriId(initialData.kategori_id || '');
+        setTanggal(initialData.tanggal);
+        setKeterangan(initialData.keterangan || '');
+        setPhotoPreview(initialData.foto_url || null);
+      } else {
+        setTipe('pengeluaran');
+        setJumlah('');
+        setSelectedAkunId(accounts[0]?.id?.toString() || '');
+        setTargetAkunId('');
+        setSelectedKategoriId('');
+        setTanggal(toInputDateFormat());
+        setKeterangan('');
+        setPhotoPreview(null);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [initialData, isOpen, accounts]);
 
   if (!isOpen) return null;
@@ -152,9 +155,6 @@ export default function TransactionFormModal({
       const now = new Date().toISOString();
 
       if (initialData?.id) {
-        const oldAkunId = initialData.akun_id;
-        const oldTargetAkunId = initialData.target_akun_id;
-
         await db.transaksi.update(initialData.id, {
           akun_id: activeAkunId,
           target_akun_id: tipe === 'transfer' ? targetAkunId : undefined,
@@ -268,7 +268,7 @@ export default function TransactionFormModal({
                 onChange={(e) => setJumlah(e.target.value.replace(/\D/g, ''))}
                 placeholder="0"
                 required
-                className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 tabular-nums"
+                className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-lg font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
               />
             </div>
 
@@ -312,7 +312,7 @@ export default function TransactionFormModal({
                 value={activeAkunId}
                 onChange={(e) => setSelectedAkunId(e.target.value)}
                 required
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 {accounts.map((acc) => (
                   <option key={acc.id} value={acc.id}>
@@ -333,7 +333,7 @@ export default function TransactionFormModal({
                 value={targetAkunId}
                 onChange={(e) => setTargetAkunId(e.target.value)}
                 required
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="">Pilih akun tujuan...</option>
                 {accounts
@@ -445,7 +445,7 @@ export default function TransactionFormModal({
                 value={tanggal}
                 onChange={(e) => setTanggal(e.target.value)}
                 required
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
             <div>
@@ -455,7 +455,7 @@ export default function TransactionFormModal({
                 value={keterangan}
                 onChange={(e) => setKeterangan(e.target.value)}
                 placeholder="Catatan..."
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
@@ -475,6 +475,7 @@ export default function TransactionFormModal({
             />
             {photoPreview ? (
               <div className="relative w-full h-24 rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={photoPreview}
                   alt="Bukti Struk"
@@ -506,7 +507,7 @@ export default function TransactionFormModal({
             <button
               type="submit"
               disabled={loading || accounts.length === 0}
-              className="w-full min-h-[44px] py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 active:scale-[0.99] transition-all"
+              className="w-full min-h-11 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 active:scale-[0.99] transition-all"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-white" />

@@ -214,15 +214,16 @@ export default function SavingsSection({
                 {/* Visual Motivation Photo */}
                 {item.foto_url ? (
                   <div className="relative h-32 w-full bg-slate-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.foto_url}
                       alt={item.nama_target}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
                   </div>
                 ) : (
-                  <div className="h-14 bg-gradient-to-r from-emerald-50 to-teal-50 p-3 flex items-center justify-between border-b border-slate-100">
+                  <div className="h-14 bg-linear-to-r from-emerald-50 to-teal-50 p-3 flex items-center justify-between border-b border-slate-100">
                     <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
                       <Target className="w-4 h-4" />
                     </div>
@@ -340,7 +341,7 @@ export default function SavingsSection({
                   onChange={(e) => setNamaTarget(e.target.value)}
                   placeholder="Contoh: Beli Laptop / Tabungan Liburan"
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -352,7 +353,7 @@ export default function SavingsSection({
                   onChange={(e) => setTargetNominal(e.target.value.replace(/\D/g, ''))}
                   placeholder="Rp 0"
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 tabular-nums"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                 />
               </div>
 
@@ -362,7 +363,7 @@ export default function SavingsSection({
                   type="date"
                   value={targetTanggal}
                   onChange={(e) => setTargetTanggal(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -447,7 +448,7 @@ export default function SavingsSection({
                   value={depositAccountId}
                   onChange={(e) => setDepositAccountId(e.target.value)}
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   {accounts.map((acc) => (
                     <option key={acc.id} value={acc.id}>
@@ -465,7 +466,7 @@ export default function SavingsSection({
                   onChange={(e) => setDepositAmount(e.target.value.replace(/\D/g, ''))}
                   placeholder="Rp 0"
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 tabular-nums"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                 />
               </div>
 
@@ -517,7 +518,7 @@ export default function SavingsSection({
                   value={withdrawAccountId}
                   onChange={(e) => setWithdrawAccountId(e.target.value)}
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   {accounts.map((acc) => (
                     <option key={acc.id} value={acc.id}>
@@ -535,7 +536,7 @@ export default function SavingsSection({
                   onChange={(e) => setWithdrawAmount(e.target.value.replace(/\D/g, ''))}
                   placeholder="Rp 0"
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 tabular-nums"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                 />
               </div>
 

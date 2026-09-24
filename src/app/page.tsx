@@ -28,7 +28,7 @@ import {
   initializeDatabaseDefaults,
   recalculateAllAccountBalances,
 } from '@/lib/db';
-import { Settings, Wallet, Plus, ShieldCheck } from 'lucide-react';
+import { Settings, Wallet, ShieldCheck } from 'lucide-react';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<TabType>('beranda');
@@ -163,7 +163,10 @@ export default function HomePage() {
   // Tampilkan reminder saat aplikasi pertama kali terbuka jika ada tagihan jatuh tempo
   useEffect(() => {
     if (!dataLoading && isUnlocked && dueRecurringItems.length > 0) {
-      setIsReminderOpen(true);
+      const timer = setTimeout(() => {
+        setIsReminderOpen(true);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [dataLoading, isUnlocked, dueRecurringItems.length]);
 

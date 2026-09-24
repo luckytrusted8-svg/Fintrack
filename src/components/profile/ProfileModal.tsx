@@ -210,7 +210,7 @@ export default function ProfileModal({
               type="text"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
-              className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500"
+              className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
             <button
               type="submit"
@@ -256,7 +256,7 @@ export default function ProfileModal({
                   value={newPin}
                   onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
                   placeholder="0000"
-                  className="w-24 px-3 py-2 text-center bg-white border border-slate-200 rounded-xl text-sm text-slate-900 tracking-widest font-bold focus:outline-none focus:border-emerald-500"
+                  className="w-24 px-3 py-2 text-center bg-white border border-slate-200 rounded-xl text-sm text-slate-900 tracking-widest font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
                 <button
                   type="submit"

@@ -197,7 +197,7 @@ export default function CategoryManagementModal({
                   onChange={(e) => setNama(e.target.value)}
                   placeholder="Contoh: Belanja Bulanan"
                   required
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 

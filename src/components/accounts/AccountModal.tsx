@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Akun, JenisAkun, db, recalculateAccountBalance, recalculateAllAccountBalances } from '@/lib/db';
+import { Akun, JenisAkun, db, recalculateAllAccountBalances } from '@/lib/db';
 import { formatRupiah, toInputDateFormat } from '@/lib/utils/format';
 import { X, Plus, ArrowRightLeft, Wallet, Check, AlertCircle, Loader2, Edit2, Trash2 } from 'lucide-react';
-import AccountIcon, { ACCOUNT_ICON_OPTIONS, ACCOUNT_TYPE_ICONS } from './AccountIcon';
+import AccountIcon, { ACCOUNT_ICON_OPTIONS } from './AccountIcon';
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -343,7 +343,7 @@ export default function AccountModal({
                   onChange={(e) => setNamaAkun(e.target.value)}
                   placeholder="Contoh: Dompet Tunai / Rekening BCA"
                   required
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -352,7 +352,7 @@ export default function AccountModal({
                 <select
                   value={jenisAkun}
                   onChange={(e) => handleJenisChange(e.target.value as JenisAkun)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="cash">Uang Tunai (Cash)</option>
                   <option value="bank">Rekening Bank</option>
@@ -399,7 +399,7 @@ export default function AccountModal({
                     setSaldoAwal(raw);
                   }}
                   placeholder="Rp 0"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 tabular-nums"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                 />
               </div>
 
@@ -448,7 +448,7 @@ export default function AccountModal({
                   value={fromAccountId}
                   onChange={(e) => setFromAccountId(e.target.value)}
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Pilih akun sumber...</option>
                   {accounts.map((acc) => (
@@ -465,7 +465,7 @@ export default function AccountModal({
                   value={toAccountId}
                   onChange={(e) => setToAccountId(e.target.value)}
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Pilih akun tujuan...</option>
                   {accounts
@@ -489,7 +489,7 @@ export default function AccountModal({
                   }}
                   placeholder="Rp 0"
                   required
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 tabular-nums"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                 />
               </div>
 
@@ -500,7 +500,7 @@ export default function AccountModal({
                   value={transferKeterangan}
                   onChange={(e) => setTransferKeterangan(e.target.value)}
                   placeholder="Contoh: Tarik tunai ATM"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 

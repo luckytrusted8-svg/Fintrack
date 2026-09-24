@@ -295,7 +295,7 @@ export default function DashboardOverview({
             accounts.map((acc) => (
               <div
                 key={acc.id}
-                className="shrink-0 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200/80 min-w-[120px]"
+                className="shrink-0 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200/80 min-w-30"
               >
                 <div className="flex items-center gap-1.5 mb-1">
                   <div

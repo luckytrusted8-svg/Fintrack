@@ -13,14 +13,17 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab, onTabChange, onQuickAdd }: BottomNavProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+    <div
+      suppressHydrationWarning
+      className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+    >
       <div className="max-w-md mx-auto px-4 h-16 flex items-center justify-between relative safe-bottom">
         {/* Tab Beranda */}
         <button
           id="nav-beranda"
           type="button"
           onClick={() => onTabChange('beranda')}
-          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-[44px] transition-colors ${
+          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-11 transition-colors ${
             activeTab === 'beranda'
               ? 'text-emerald-600 font-semibold'
               : 'text-slate-400 hover:text-slate-700'
@@ -36,7 +39,7 @@ export default function BottomNav({ activeTab, onTabChange, onQuickAdd }: Bottom
           id="nav-transaksi"
           type="button"
           onClick={() => onTabChange('transaksi')}
-          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-[44px] transition-colors ${
+          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-11 transition-colors ${
             activeTab === 'transaksi'
               ? 'text-emerald-600 font-semibold'
               : 'text-slate-400 hover:text-slate-700'
@@ -65,7 +68,7 @@ export default function BottomNav({ activeTab, onTabChange, onQuickAdd }: Bottom
           id="nav-anggaran"
           type="button"
           onClick={() => onTabChange('anggaran')}
-          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-[44px] transition-colors ${
+          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-11 transition-colors ${
             activeTab === 'anggaran'
               ? 'text-emerald-600 font-semibold'
               : 'text-slate-400 hover:text-slate-700'
@@ -81,7 +84,7 @@ export default function BottomNav({ activeTab, onTabChange, onQuickAdd }: Bottom
           id="nav-akun"
           type="button"
           onClick={() => onTabChange('akun')}
-          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-[44px] transition-colors ${
+          className={`flex flex-col items-center justify-center flex-1 py-1 min-h-11 transition-colors ${
             activeTab === 'akun'
               ? 'text-emerald-600 font-semibold'
               : 'text-slate-400 hover:text-slate-700'

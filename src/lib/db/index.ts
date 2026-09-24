@@ -1,4 +1,4 @@
-import Dexie, { Table } from 'dexie';
+import Dexie, { Table, IndexableType } from 'dexie';
 
 export type JenisAkun = 'bank' | 'cash' | 'ewallet' | 'investasi' | 'lainnya';
 export type JenisTransaksi = 'pemasukan' | 'pengeluaran' | 'transfer';
@@ -120,6 +120,9 @@ export class FintrackDatabase extends Dexie {
       tabungan: '++id, nama_target, created_at',
       user_profile: '++id, email',
     });
+    this.version(2).stores({
+      anggaran: '++id, [bulan+tahun], [kategori_id+bulan+tahun], bulan, tahun, kategori_id',
+    });
   }
 }
 
@@ -137,7 +140,7 @@ export async function recalculateAccountBalance(accountId: string | number): Pro
 
   let account = !isNaN(numId) ? await db.akun.get(numId) : undefined;
   if (!account) {
-    account = await db.akun.get(strId as any);
+    account = await db.akun.get(strId as unknown as IndexableType);
   }
   if (!account) {
     const all = await db.akun.toArray();

@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Transaksi, Akun, Kategori, db, recalculateAccountBalance, recalculateAllAccountBalances } from '@/lib/db';
+import { Transaksi, Akun, Kategori, db, recalculateAllAccountBalances } from '@/lib/db';
 import { formatRupiah, formatTanggal } from '@/lib/utils/format';
 import { exportTransaksiToExcel } from '@/lib/utils/exportExcel';
 import {
   FileSpreadsheet,
   Search,
-  ArrowUpRight,
-  ArrowDownLeft,
   ArrowRightLeft,
   Image as ImageIcon,
   Edit2,
@@ -22,8 +20,8 @@ import CategoryIcon from '@/components/categories/CategoryIcon';
 
 interface TransactionHistoryProps {
   transactions: Transaksi[];
-  accounts: Akun[];
-  categories: Kategori[];
+  accounts?: Akun[];
+  categories?: Kategori[];
   onRefresh: () => void;
   loading: boolean;
   onEditTransaction?: (trx: Transaksi) => void;
@@ -31,8 +29,6 @@ interface TransactionHistoryProps {
 
 export default function TransactionHistory({
   transactions,
-  accounts,
-  categories,
   onRefresh,
   loading,
   onEditTransaction,
@@ -97,7 +93,7 @@ export default function TransactionHistory({
   }, [filteredList]);
 
   // Hapus transaksi
-  const handleDeleteTransaction = async (id: string, akunId: string, targetAkunId?: string) => {
+  const handleDeleteTransaction = async (id: string) => {
     if (!confirm('Yakin ingin menghapus catatan transaksi ini? Saldo dompet akan dihitung ulang.')) {
       return;
     }
@@ -157,7 +153,7 @@ export default function TransactionHistory({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari transaksi, kategori, atau akun..."
-            className="w-full pl-9 pr-3.5 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 shadow-xs"
+            className="w-full pl-9 pr-3.5 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-xs"
           />
         </div>
 
@@ -322,36 +318,38 @@ export default function TransactionHistory({
               </h4>
             </div>
 
-            <div className="space-y-2 text-xs divide-y divide-slate-100 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-              <div className="flex justify-between py-1.5">
-                <span className="text-slate-500">Tanggal:</span>
-                <span className="font-semibold text-slate-900">{formatTanggal(selectedTx.tanggal)}</span>
-              </div>
-              <div className="flex justify-between py-1.5">
-                <span className="text-slate-500">Akun:</span>
-                <span className="font-semibold text-slate-900">{selectedTx.akun?.nama || '-'}</span>
-              </div>
-              {selectedTx.tipe === 'transfer' && (
+            <div className="text-xs bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+              <div className="space-y-2 divide-y divide-slate-100">
                 <div className="flex justify-between py-1.5">
-                  <span className="text-slate-500">Tujuan Transfer:</span>
-                  <span className="font-semibold text-slate-900">{selectedTx.target_akun?.nama || '-'}</span>
+                  <span className="text-slate-500">Tanggal:</span>
+                  <span className="font-semibold text-slate-900">{formatTanggal(selectedTx.tanggal)}</span>
                 </div>
-              )}
-              {selectedTx.kategori && (
-                <div className="flex justify-between py-1.5 items-center">
-                  <span className="text-slate-500">Kategori:</span>
-                  <span className="font-semibold text-slate-900 flex items-center gap-1.5">
-                    <CategoryIcon name={selectedTx.kategori.icon} className="w-3.5 h-3.5" />
-                    <span>{selectedTx.kategori.nama}</span>
-                  </span>
-                </div>
-              )}
-              {selectedTx.keterangan && (
                 <div className="flex justify-between py-1.5">
-                  <span className="text-slate-500">Keterangan:</span>
-                  <span className="text-slate-900 text-right">{selectedTx.keterangan}</span>
+                  <span className="text-slate-500">Akun:</span>
+                  <span className="font-semibold text-slate-900">{selectedTx.akun?.nama || '-'}</span>
                 </div>
-              )}
+                {selectedTx.tipe === 'transfer' && (
+                  <div className="flex justify-between py-1.5">
+                    <span className="text-slate-500">Tujuan Transfer:</span>
+                    <span className="font-semibold text-slate-900">{selectedTx.target_akun?.nama || '-'}</span>
+                  </div>
+                )}
+                {selectedTx.kategori && (
+                  <div className="flex justify-between py-1.5 items-center">
+                    <span className="text-slate-500">Kategori:</span>
+                    <span className="font-semibold text-slate-900 flex items-center gap-1.5">
+                      <CategoryIcon name={selectedTx.kategori.icon} className="w-3.5 h-3.5" />
+                      <span>{selectedTx.kategori.nama}</span>
+                    </span>
+                  </div>
+                )}
+                {selectedTx.keterangan && (
+                  <div className="flex justify-between py-1.5">
+                    <span className="text-slate-500">Keterangan:</span>
+                    <span className="text-slate-900 text-right">{selectedTx.keterangan}</span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Lampiran Foto Bukti dengan Tombol Zoom */}
@@ -372,6 +370,7 @@ export default function TransactionHistory({
                   onClick={() => selectedTx.foto_url && setZoomedPhotoUrl(selectedTx.foto_url)}
                   className="rounded-2xl overflow-hidden border border-slate-200 max-h-48 cursor-pointer relative group bg-slate-50"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={selectedTx.foto_url}
                     alt="Bukti Struk"
@@ -404,7 +403,7 @@ export default function TransactionHistory({
                 type="button"
                 onClick={() =>
                   selectedTx.id &&
-                  handleDeleteTransaction(selectedTx.id, selectedTx.akun_id, selectedTx.target_akun_id)
+                  handleDeleteTransaction(selectedTx.id)
                 }
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-2xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
@@ -432,6 +431,7 @@ export default function TransactionHistory({
             >
               <X className="w-6 h-6" />
             </button>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={zoomedPhotoUrl}
               alt="Bukti Struk Full"

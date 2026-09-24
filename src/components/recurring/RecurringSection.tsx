@@ -225,7 +225,7 @@ export default function RecurringSection({
                   onChange={(e) => setKeterangan(e.target.value)}
                   placeholder="Contoh: Tagihan WiFi Indihome"
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -235,7 +235,7 @@ export default function RecurringSection({
                   <select
                     value={tipe}
                     onChange={(e) => setTipe(e.target.value as 'pengeluaran' | 'pemasukan')}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
                     <option value="pengeluaran">Pengeluaran</option>
                     <option value="pemasukan">Pemasukan</option>
@@ -250,7 +250,7 @@ export default function RecurringSection({
                     value={dayOfMonth}
                     onChange={(e) => setDayOfMonth(e.target.value)}
                     required
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
               </div>
@@ -263,7 +263,7 @@ export default function RecurringSection({
                   onChange={(e) => setJumlah(e.target.value.replace(/\D/g, ''))}
                   placeholder="Rp 0"
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 tabular-nums"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                 />
               </div>
 
@@ -273,7 +273,7 @@ export default function RecurringSection({
                   value={accountId}
                   onChange={(e) => setAccountId(e.target.value)}
                   required
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   {accounts.map((acc) => (
                     <option key={acc.id} value={acc.id}>

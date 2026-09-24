@@ -96,7 +96,7 @@ export default function PinLockScreen({
             key={digit}
             type="button"
             onClick={() => handleKeyPress(digit)}
-            className="h-16 rounded-2xl bg-white active:bg-slate-100 border border-slate-200 text-xl font-bold text-slate-900 flex items-center justify-center transition-colors shadow-xs active:scale-95"
+            className="h-16 rounded-2xl bg-white border border-slate-200 text-xl font-bold text-slate-900 flex items-center justify-center transition-all shadow-xs active:scale-95 active:brightness-95"
           >
             {digit}
           </button>
@@ -117,7 +117,7 @@ export default function PinLockScreen({
         <button
           type="button"
           onClick={() => handleKeyPress('0')}
-          className="h-16 rounded-2xl bg-white active:bg-slate-100 border border-slate-200 text-xl font-bold text-slate-900 flex items-center justify-center transition-colors shadow-xs active:scale-95"
+          className="h-16 rounded-2xl bg-white border border-slate-200 text-xl font-bold text-slate-900 flex items-center justify-center transition-all shadow-xs active:scale-95 active:brightness-95"
         >
           0
         </button>
@@ -126,7 +126,7 @@ export default function PinLockScreen({
           type="button"
           onClick={handleDelete}
           disabled={enteredPin.length === 0}
-          className="h-16 rounded-2xl bg-white active:bg-slate-100 border border-slate-200 text-slate-600 disabled:opacity-30 flex items-center justify-center transition-colors shadow-xs active:scale-95"
+          className="h-16 rounded-2xl bg-white border border-slate-200 text-slate-600 disabled:opacity-30 flex items-center justify-center transition-all shadow-xs active:scale-95 active:brightness-95"
           aria-label="Hapus digit terakhir"
         >
           <Delete className="w-6 h-6" />
