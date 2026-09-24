@@ -26,6 +26,7 @@ import {
   TransaksiRutin,
   UserProfile,
   initializeDatabaseDefaults,
+  recalculateAllAccountBalances,
 } from '@/lib/db';
 import { Settings, Wallet, Plus, ShieldCheck } from 'lucide-react';
 
@@ -61,6 +62,9 @@ export default function HomePage() {
   // Fetch all user data
   const fetchData = useCallback(async () => {
     try {
+      // 0. Hitung ulang seluruh saldo secara otomatis dan akurat
+      await recalculateAllAccountBalances();
+
       // 1. Akun
       const akunList = await db.akun.toArray();
       setAccounts(akunList);

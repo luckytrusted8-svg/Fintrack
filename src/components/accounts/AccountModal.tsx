@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Akun, JenisAkun, db, recalculateAccountBalance } from '@/lib/db';
+import { Akun, JenisAkun, db, recalculateAccountBalance, recalculateAllAccountBalances } from '@/lib/db';
 import { formatRupiah, toInputDateFormat } from '@/lib/utils/format';
 import { X, Plus, ArrowRightLeft, Wallet, Check, AlertCircle, Loader2, Edit2, Trash2 } from 'lucide-react';
 import AccountIcon, { ACCOUNT_ICON_OPTIONS, ACCOUNT_TYPE_ICONS } from './AccountIcon';
@@ -65,7 +65,6 @@ export default function AccountModal({
 
   const handleJenisChange = (newJenis: JenisAkun) => {
     setJenisAkun(newJenis);
-    // Otomatis rekomendasikan ikon sesuai tipe akun
     setSelectedIcon(DEFAULT_ICON_FOR_TYPE[newJenis] || 'wallet');
   };
 
@@ -93,8 +92,6 @@ export default function AccountModal({
           warna_hex: selectedColor,
           updated_at: now,
         });
-
-        await recalculateAccountBalance(editingAccount.id);
       } else {
         await db.akun.add({
           nama: namaAkun.trim(),
@@ -108,6 +105,8 @@ export default function AccountModal({
           updated_at: now,
         });
       }
+
+      await recalculateAllAccountBalances();
 
       setNamaAkun('');
       setSaldoAwal('');
@@ -153,8 +152,7 @@ export default function AccountModal({
         updated_at: now,
       });
 
-      await recalculateAccountBalance(fromAccountId);
-      await recalculateAccountBalance(toAccountId);
+      await recalculateAllAccountBalances();
 
       setTransferAmount('');
       setTransferKeterangan('');
@@ -173,6 +171,7 @@ export default function AccountModal({
 
     try {
       await db.akun.delete(id);
+      await recalculateAllAccountBalances();
       onSuccess();
     } catch {
       setErrorMsg('Gagal menghapus akun.');

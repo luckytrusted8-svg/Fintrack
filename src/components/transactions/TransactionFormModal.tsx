@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Akun, Kategori, JenisTransaksi, Transaksi, db, recalculateAccountBalance } from '@/lib/db';
+import { Akun, Kategori, JenisTransaksi, Transaksi, db, recalculateAccountBalance, recalculateAllAccountBalances } from '@/lib/db';
 import { formatRupiah, toInputDateFormat } from '@/lib/utils/format';
 import { compressImageToBase64 } from '@/lib/utils/image';
 import { X, Camera, Image as ImageIcon, Loader2, AlertCircle, Plus } from 'lucide-react';
@@ -166,36 +166,9 @@ export default function TransactionFormModal({
           foto_url: photoPreview || undefined,
           updated_at: now,
         });
-
-        await recalculateAccountBalance(activeAkunId);
-        if (oldAkunId && oldAkunId !== activeAkunId) {
-          await recalculateAccountBalance(oldAkunId);
-        }
-        if (targetAkunId) {
-          await recalculateAccountBalance(targetAkunId);
-        }
-        if (oldTargetAkunId && oldTargetAkunId !== targetAkunId) {
-          await recalculateAccountBalance(oldTargetAkunId);
-        }
-      } else {
-        await db.transaksi.add({
-          akun_id: activeAkunId,
-          target_akun_id: tipe === 'transfer' ? targetAkunId : undefined,
-          kategori_id: tipe !== 'transfer' ? selectedKategoriId || undefined : undefined,
-          tanggal,
-          tipe,
-          jumlah: nominal,
-          keterangan: keterangan.trim() || undefined,
-          foto_url: photoPreview || undefined,
-          created_at: now,
-          updated_at: now,
-        });
-
-        await recalculateAccountBalance(activeAkunId);
-        if (tipe === 'transfer' && targetAkunId) {
-          await recalculateAccountBalance(targetAkunId);
-        }
       }
+
+      await recalculateAllAccountBalances();
 
       onSuccess();
       onClose();

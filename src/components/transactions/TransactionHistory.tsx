@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Transaksi, Akun, Kategori, db, recalculateAccountBalance } from '@/lib/db';
+import { Transaksi, Akun, Kategori, db, recalculateAccountBalance, recalculateAllAccountBalances } from '@/lib/db';
 import { formatRupiah, formatTanggal } from '@/lib/utils/format';
 import { exportTransaksiToExcel } from '@/lib/utils/exportExcel';
 import {
@@ -105,10 +105,7 @@ export default function TransactionHistory({
     setIsDeleting(true);
     try {
       await db.transaksi.delete(id);
-      await recalculateAccountBalance(akunId);
-      if (targetAkunId) {
-        await recalculateAccountBalance(targetAkunId);
-      }
+      await recalculateAllAccountBalances();
       setSelectedTx(null);
       onRefresh();
     } catch (err) {

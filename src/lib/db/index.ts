@@ -126,12 +126,26 @@ export class FintrackDatabase extends Dexie {
 export const db = new FintrackDatabase();
 
 /**
- * Hitung ulang saldo terkini akun secara real-time dari saldo awal + seluruh mutasi transaksi
+ * Hitung ulang saldo terkini akun secara real-time dari saldo awal + seluruh mutasi transaksi.
+ * Menangani konversi ID angka maupun string agar 100% akurat di IndexedDB.
  */
-export async function recalculateAccountBalance(accountId: string): Promise<void> {
-  const account = await db.akun.get(accountId);
-  if (!account) return;
+export async function recalculateAccountBalance(accountId: string | number): Promise<void> {
+  if (accountId === undefined || accountId === null || accountId === '') return;
 
+  const strId = accountId.toString();
+  const numId = Number(accountId);
+
+  let account = !isNaN(numId) ? await db.akun.get(numId) : undefined;
+  if (!account) {
+    account = await db.akun.get(strId as any);
+  }
+  if (!account) {
+    const all = await db.akun.toArray();
+    account = all.find((a) => a.id !== undefined && a.id.toString() === strId);
+  }
+  if (!account || account.id === undefined) return;
+
+  const targetIdStr = account.id.toString();
   const allTx = await db.transaksi.toArray();
 
   let pemasukan = 0;
@@ -141,7 +155,10 @@ export async function recalculateAccountBalance(accountId: string): Promise<void
 
   allTx.forEach((tx) => {
     const amount = Number(tx.jumlah) || 0;
-    if (tx.akun_id === accountId) {
+    const txAkunIdStr = tx.akun_id !== undefined ? String(tx.akun_id) : '';
+    const txTargetAkunIdStr = tx.target_akun_id !== undefined ? String(tx.target_akun_id) : '';
+
+    if (txAkunIdStr === targetIdStr) {
       if (tx.tipe === 'pemasukan') {
         pemasukan += amount;
       } else if (tx.tipe === 'pengeluaran') {
@@ -151,17 +168,29 @@ export async function recalculateAccountBalance(accountId: string): Promise<void
       }
     }
 
-    if (tx.tipe === 'transfer' && tx.target_akun_id === accountId) {
+    if (tx.tipe === 'transfer' && txTargetAkunIdStr === targetIdStr) {
       transferMasuk += amount;
     }
   });
 
   const saldoSekarang = Number(account.saldo_awal || 0) + pemasukan - pengeluaran + transferMasuk - transferKeluar;
 
-  await db.akun.update(accountId, {
+  await db.akun.update(account.id, {
     saldo_sekarang: saldoSekarang,
     updated_at: new Date().toISOString(),
   });
+}
+
+/**
+ * Hitung ulang seluruh saldo akun yang ada di sistem
+ */
+export async function recalculateAllAccountBalances(): Promise<void> {
+  const allAccounts = await db.akun.toArray();
+  for (const acc of allAccounts) {
+    if (acc.id !== undefined) {
+      await recalculateAccountBalance(acc.id);
+    }
+  }
 }
 
 /**
