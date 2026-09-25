@@ -1,22 +1,63 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Transaksi } from '../db';
-import { formatRupiah, formatTanggal } from './format';
+import { formatRupiah } from './format';
 
-async function getBase64Image(url: string): Promise<string | null> {
+async function getMascotImageInfo(url: string): Promise<{ dataUrl: string; width: number; height: number } | null> {
   try {
     const res = await fetch(url);
     if (!res.ok) return null;
     const blob = await res.blob();
-    return new Promise((resolve) => {
+    const dataUrl = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = () => resolve(null);
+      reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
+
+    const dims = await new Promise<{ width: number; height: number }>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ width: img.naturalWidth || 391, height: img.naturalHeight || 261 });
+      img.onerror = () => resolve({ width: 391, height: 261 });
+      img.src = dataUrl;
+    });
+
+    return { dataUrl, ...dims };
   } catch {
     return null;
   }
+}
+
+function formatTanggalFormal(dateString: string): string {
+  if (!dateString) return '-';
+  const parts = dateString.split('-');
+  if (parts.length === 3) {
+    const y = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    const d = parseInt(parts[2], 10);
+    const bulanIndo = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    return `${d} ${bulanIndo[m - 1] || ''} ${y}`;
+  }
+  return dateString;
+}
+
+function formatTanggalTabel(dateString: string): string {
+  if (!dateString) return '-';
+  const parts = dateString.split('-');
+  if (parts.length === 3) {
+    const y = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    const d = parseInt(parts[2], 10);
+    const bulanIndo = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+    ];
+    return `${d} ${bulanIndo[m - 1] || ''} ${y}`;
+  }
+  return dateString;
 }
 
 export async function exportTransaksiToPdf(
@@ -44,10 +85,17 @@ export async function exportTransaksiToPdf(
     (a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime()
   );
 
-  const periodeAwal = sortedList[sortedList.length - 1]?.tanggal
-    ? formatTanggal(sortedList[sortedList.length - 1].tanggal)
-    : '-';
-  const periodeAkhir = sortedList[0]?.tanggal ? formatTanggal(sortedList[0].tanggal) : '-';
+  const tAwal = sortedList[sortedList.length - 1]?.tanggal;
+  const tAkhir = sortedList[0]?.tanggal;
+
+  let periodeText = '';
+  if (!tAwal && !tAkhir) {
+    periodeText = 'Periode: Semua Riwayat Transaksi';
+  } else if (tAwal === tAkhir) {
+    periodeText = `Periode: ${formatTanggalFormal(tAwal)}`;
+  } else {
+    periodeText = `Periode: ${formatTanggalTabel(tAwal)} s/d ${formatTanggalTabel(tAkhir)}`;
+  }
 
   const now = new Date();
   const tanggalCetak = new Intl.DateTimeFormat('id-ID', {
@@ -70,15 +118,20 @@ export async function exportTransaksiToPdf(
   doc.setFillColor(16, 185, 129); // #10B981
   doc.roundedRect(margin, 12, pageWidth - margin * 2, 38, 4, 4, 'F');
 
-  // Accent curve or highlight
+  // Accent bar kiri
   doc.setFillColor(5, 150, 105); // #059669
   doc.rect(margin, 12, 4, 38, 'F');
 
-  // Mascot Image (Transparent Background)
-  const mascotBase64 = await getBase64Image('/mascot.png');
-  if (mascotBase64) {
+  // Mascot Image dengan Aspect Ratio Alami (Preserve aspect ratio, tidak gepeng)
+  const mascotInfo = await getMascotImageInfo('/mascot.png');
+  if (mascotInfo) {
     try {
-      doc.addImage(mascotBase64, 'PNG', pageWidth - margin - 38, 13, 36, 36);
+      const targetHeight = 32; // mm
+      const aspectRatio = mascotInfo.width / mascotInfo.height;
+      const targetWidth = targetHeight * aspectRatio; // ~48 mm (proposional 100%)
+      const imgX = pageWidth - margin - targetWidth - 3;
+      const imgY = 15;
+      doc.addImage(mascotInfo.dataUrl, 'PNG', imgX, imgY, targetWidth, targetHeight);
     } catch (e) {
       console.warn('Gagal memuat gambar maskot ke PDF:', e);
     }
@@ -97,7 +150,7 @@ export async function exportTransaksiToPdf(
   doc.setFontSize(9);
   doc.setTextColor(236, 253, 245);
   doc.text('Ringkasan Mutasi Kas & Transaksi Finansial Pribadi', margin + 8, 36);
-  doc.text(`Periode: ${periodeAwal} — ${periodeAkhir}`, margin + 8, 43);
+  doc.text(periodeText, margin + 8, 43);
 
   // 2. Metadata Bar
   doc.setDrawColor(226, 232, 240); // #E2E8F0
@@ -171,7 +224,7 @@ export async function exportTransaksiToPdf(
     cardY + 13.5
   );
 
-  // 4. Data Rows for Table
+  // 4. Data Rows for Table (dengan tanggal format formal, bukan "Kemarin")
   const tableData = sortedList.map((trx, idx) => {
     const isIncome = trx.tipe === 'pemasukan';
     const isExpense = trx.tipe === 'pengeluaran';
@@ -182,7 +235,7 @@ export async function exportTransaksiToPdf(
 
     return [
       (idx + 1).toString(),
-      formatTanggal(trx.tanggal),
+      formatTanggalTabel(trx.tanggal),
       tipeLabel,
       trx.akun?.nama || '-',
       kategoriText,
@@ -223,7 +276,6 @@ export async function exportTransaksiToPdf(
       6: { cellWidth: 'auto', textColor: [100, 116, 139] },
     },
     didParseCell: (data) => {
-      // Pewarnaan baris sesuai tipe transaksi pada kolom tipe dan nominal
       if (data.section === 'body') {
         const rowTrx = sortedList[data.row.index];
         if (!rowTrx) return;
@@ -255,7 +307,6 @@ export async function exportTransaksiToPdf(
       }
     },
     didDrawPage: (data) => {
-      // Footer di setiap halaman
       const totalPages = doc.getNumberOfPages();
       const currentPage = data.pageNumber;
       const pageH = doc.internal.pageSize.getHeight();
