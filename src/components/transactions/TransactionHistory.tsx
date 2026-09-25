@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { Transaksi, Akun, Kategori, db, recalculateAllAccountBalances } from '@/lib/db';
 import { formatRupiah, formatTanggal } from '@/lib/utils/format';
-import { exportTransaksiToExcel } from '@/lib/utils/exportExcel';
+import { exportTransaksiToPdf } from '@/lib/utils/exportPdf';
 import {
-  FileSpreadsheet,
+  FileText,
   Search,
   ArrowRightLeft,
   Image as ImageIcon,
@@ -115,7 +116,7 @@ export default function TransactionHistory({
     if (filteredList.length === 0) return;
     setIsExporting(true);
     try {
-      await exportTransaksiToExcel(filteredList);
+      await exportTransaksiToPdf(filteredList);
     } finally {
       setIsExporting(false);
     }
@@ -123,7 +124,7 @@ export default function TransactionHistory({
 
   return (
     <div className="space-y-4">
-      {/* Header and Export Excel Button */}
+      {/* Header and Export PDF Button */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-slate-900">Histori Transaksi</h2>
@@ -136,11 +137,11 @@ export default function TransactionHistory({
           className="py-2 px-3 bg-white hover:bg-slate-50 border border-slate-200 text-xs font-semibold text-emerald-700 rounded-xl flex items-center gap-1.5 disabled:opacity-50 transition-colors shadow-xs"
         >
           {isExporting ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-600" />
           ) : (
-            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+            <FileText className="w-3.5 h-3.5 text-emerald-600" />
           )}
-          <span>Export Excel</span>
+          <span>Export PDF</span>
         </button>
       </div>
 
@@ -189,9 +190,17 @@ export default function TransactionHistory({
           <div className="h-16 bg-slate-200 rounded-2xl" />
         </div>
       ) : groupedTransactions.length === 0 ? (
-        <div className="py-12 text-center bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-          <Receipt className="w-10 h-10 text-slate-400 mx-auto mb-2" />
-          <p className="text-sm font-semibold text-slate-900">Belum ada catatan transaksi</p>
+        <div className="py-10 text-center bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs">
+          <div className="w-24 h-24 mx-auto mb-2 relative">
+            <Image
+              src="/mascot.png"
+              alt="Fintrack Mascot"
+              width={96}
+              height={96}
+              className="object-contain drop-shadow-md mx-auto"
+            />
+          </div>
+          <p className="text-sm font-bold text-slate-900">Belum ada catatan transaksi</p>
           <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
             {searchQuery || filterType !== 'all'
               ? 'Tidak ada transaksi yang cocok dengan pencarian Anda.'
